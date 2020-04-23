@@ -10,6 +10,9 @@
 
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
     <rosparam command="load" file="$(find jackal_control)/config/robot_localization.yaml" />
+    <param name="odom_frame" value="$(arg robot_name)/odom"/>
+    <param name="world_frame" value="$(arg robot_name)/odom"/>
+    <param name="base_link_frame" value="$(arg robot_name)/base_link"/>
   </node>
 
   <node pkg="twist_mux" type="twist_mux" name="twist_mux">
