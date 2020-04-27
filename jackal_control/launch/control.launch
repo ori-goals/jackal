@@ -1,5 +1,5 @@
 <launch>
-  <arg name="tf_prefix"/>
+  <arg name="tf_prefix" default=""/>
   <rosparam command="load" file="$(find jackal_control)/config/control.yaml" />
 
   <group if="$(optenv JACKAL_CONTROL_EXTRAS 0)" >
