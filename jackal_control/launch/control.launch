@@ -1,6 +1,10 @@
 <launch>
   <arg name="tf_prefix" default=""/>
   <rosparam command="load" file="$(find jackal_control)/config/control.yaml" />
+  <group ns="jackal_velocity_controller">
+    <param name="odom_frame_id" value="$(arg tf_prefix)/odom"/>
+    <param name="base_frame_id" value="$(arg tf_prefix)/base_link"/>
+  </group>
 
   <group if="$(optenv JACKAL_CONTROL_EXTRAS 0)" >
     <rosparam command="load" file="$(env JACKAL_CONTROL_EXTRAS_PATH)" />
