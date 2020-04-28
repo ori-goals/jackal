@@ -254,6 +254,7 @@
 
   <!-- Bring in simulation data for Gazebo. -->
   <xacro:include filename="$(find jackal_description)/urdf/jackal.gazebo" />
+  <xacro:jackal_gazebo tf_prefix="$(arg tf_prefix)"/>
 
   <!-- Optional standard accessories, including their simulation data. The rendering
        of these into the final description is controlled by optenv variables, which

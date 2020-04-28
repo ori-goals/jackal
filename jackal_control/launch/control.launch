@@ -1,10 +1,13 @@
 <launch>
+  <!-- In order to prevent spam from the controller spawner when tf_prefix is empty, the value of tf_prefix
+       should include a / at the end if it is set.
+       e.g. <arg name=tf_prefix value="robot_name/"/> in the launch file which includes this one.
+       Because of limitations of roslaunch xml we cannot check if the tf_prefix is empty and set the frames to have
+       no prepended /.-->
   <arg name="tf_prefix" default=""/>
   <rosparam command="load" file="$(find jackal_control)/config/control.yaml" />
-  <group ns="jackal_velocity_controller">
-    <param name="odom_frame_id" value="$(arg tf_prefix)/odom"/>
-    <param name="base_frame_id" value="$(arg tf_prefix)/base_link"/>
-  </group>
+  <param name="jackal_velocity_controller/odom_frame_id" value="$(arg tf_prefix)odom"/>
+  <param name="jackal_velocity_controller/base_frame_id" value="$(arg tf_prefix)base_link"/>
 
   <group if="$(optenv JACKAL_CONTROL_EXTRAS 0)" >
     <rosparam command="load" file="$(env JACKAL_CONTROL_EXTRAS_PATH)" />
@@ -15,9 +18,9 @@
 
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
     <rosparam command="load" file="$(find jackal_control)/config/robot_localization.yaml" />
-    <param name="odom_frame" value="$(arg tf_prefix)/odom"/>
-    <param name="world_frame" value="$(arg tf_prefix)/odom"/>
-    <param name="base_link_frame" value="$(arg tf_prefix)/base_link"/>
+    <param name="odom_frame" value="$(arg tf_prefix)odom"/>
+    <param name="world_frame" value="$(arg tf_prefix)odom"/>
+    <param name="base_link_frame" value="$(arg tf_prefix)base_link"/>
   </node>
 
   <node pkg="twist_mux" type="twist_mux" name="twist_mux">
