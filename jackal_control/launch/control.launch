@@ -4,6 +4,7 @@
   <arg name="base_frame" default="base_link"/>
   <arg name="prefixed_odom_frame" default="$(eval tf_prefix + '/' + odom_frame if tf_prefix else odom_frame)"/>
   <arg name="prefixed_base_frame" default="$(eval tf_prefix + '/' + base_frame if tf_prefix else base_frame)"/>
+  <arg name="enable_ekf" default="$(optenv ENABLE_EKF true)"/>
 
   <rosparam command="load" file="$(find jackal_control)/config/control.yaml" />
   <param name="jackal_velocity_controller/odom_frame_id" value="$(arg prefixed_odom_frame)"/>
@@ -16,12 +17,14 @@
   <node name="controller_spawner" pkg="controller_manager" type="spawner"
         args="jackal_joint_publisher jackal_velocity_controller" />
 
-  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
-    <rosparam command="load" file="$(find jackal_control)/config/robot_localization.yaml" />
-    <param name="odom_frame" value="$(arg prefixed_odom_frame)"/>
-    <param name="world_frame" value="$(arg prefixed_odom_frame)"/>
-    <param name="base_link_frame" value="$(arg prefixed_base_frame)"/>
-  </node>
+  <group if="$(arg enable_ekf)" >
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+      <rosparam command="load" file="$(find jackal_control)/config/robot_localization.yaml" />
+      <param name="odom_frame" value="$(arg prefixed_odom_frame)"/>
+      <param name="world_frame" value="$(arg prefixed_odom_frame)"/>
+      <param name="base_link_frame" value="$(arg prefixed_base_frame)"/>
+    </node>
+  </group>
 
   <node pkg="twist_mux" type="twist_mux" name="twist_mux">
     <rosparam command="load" file="$(find jackal_control)/config/twist_mux.yaml" />
